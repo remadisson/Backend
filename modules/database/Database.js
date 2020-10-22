@@ -14,13 +14,14 @@
 
 // Defines monk, framekwork for mongodb
 const monk = require('monk');
+
 // Loads variables from .env
 const dotenv = require('dotenv');
 dotenv.config();
 
 // Defines databases used for database
 const dbrepo = monk(process.env.link);
-const systemdb = dbrepo('system');
+const systemdb = dbrepo('system_databases');
 
 dbrepo.catch(err =>{
     console.log(err);

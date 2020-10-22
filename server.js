@@ -13,6 +13,9 @@ const app = express();
 // Allowing Requests
 const cors = require('cors');
 
+//Imports Commandline features
+const commandline = require('./modules/commandline/climain');
+
 // Express using cors and their own json formats
 app.use(cors());
 app.use(express.json());
@@ -26,7 +29,7 @@ const clear = require('clear');
     app.get('/', (req, res) => {
         let url = req.originalUrl;
         res.send({
-            message: "Bad request, nothing found with: " + url,
+            message: "Bad request, unused route: " + url,
             status: 400
         })
     })
@@ -41,6 +44,8 @@ let listener = app.listen(port, () => {
     console.log(chalk.red("Made by remadisson"));
     console.log(" ");
     console.log("-> Listening on port " + listener.address().port);
+
+    commandline.init();
 });
 
 module.exports = {getPort: port};
