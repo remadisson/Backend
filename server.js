@@ -40,7 +40,7 @@ const clear = require('clear');
 // Listening to port
 let listener = app.listen(port, () => {
     clear();
-    console.log(chalk.redBright(figlet.textSync("Modular-Backend", {horizontalLayout: 'full'})));
+    console.log(chalk.redBright(figlet.textSync("Backend", {horizontalLayout: 'full'})));
     console.log(chalk.red("Made by remadisson"));
     console.log(" ");
     console.log("-> Listening on port " + listener.address().port);

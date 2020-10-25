@@ -51,7 +51,7 @@ module.exports.user = {
     }, 
 
     getUsers: () => {
-        return sysusers.find({}, "-_id").then(callback => callback);
+        return sysusers.find({limit: 100}, "-_id").then(callback => callback);
     },
 
     getUser: async(id) => {
@@ -63,6 +63,6 @@ module.exports.user = {
     },
 
     deleteUser: async(id) => {
-        return await sysusers
+        return await sysusers.deleteUser({id: id}).then(callback => callback);
     }
 }

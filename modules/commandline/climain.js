@@ -1,6 +1,7 @@
 // Allows the interaction with the command line
 const readline = require('readline');
 const chalk = require('chalk');
+const clear = require('clear');
 
 const rl = readline.createInterface({
     terminal: false,
@@ -10,37 +11,36 @@ const rl = readline.createInterface({
 
 let send_message = false;
 
-const commands = [{command: "user", function: userCommand}];
+//Import Commands
+const userCommand = require('./user_command');
+
+const commands =    [{command: "user", function: userCommand},
+                    {command: "clear", function: doClear},
+                    {command: "help", function: sendHelp}];
 
 module.exports.init = async() => {
     if(!send_message) console.log(chalk.blueBright("> Use `help` for more information.")), send_message = true;
 
     await new Promise((resolve, reject) => {
-        rl.question("> ", (input) => {
-            const command = input.toLowerCase().trim().replace("  ", " ").trim().split(" ")[0];
+        rl.question(chalk.cyan("> "), async(input) => {
+            const raw = input.toString().toLowerCase().replace("  ", " ").trim().split(" ");
+            const command = raw[0];
             let args = [];
 
-            for(i = 1; i < input.toString().toLowerCase().replace("  ", " ").trim().split(" "); i++){
-                args[i-1] = input.toString().toLowerCase().replace("  ", " ").trim().split(" ")[i];
+            for(i = 1; i < raw.length; i++){
+                args[i-1] = raw[i];
             }
 
             if(checkCommand(command)){
-                getCommand(command)['function'](">> hurensohn");
+                await getCommand(command)['function'](args);
                 resolve();
             } else {
-                console.log("This is not a command!");
+                console.log(chalk.red("> This is not a command!"));
                 resolve();
             }
             
         });
-    }).then(callback => this.init());
-    
-}
-
-// Defines Methods that are use for Commands
-// TODO OWN CLASSES FOR THOSE COMMANDS.
-
-function userCommand(agrs){
+    }).then(() => this.init());
     
 }
 
@@ -69,4 +69,29 @@ function getCommand(command){
     }
 
     return false;
+}
+
+/**
+ * Clear method
+ */
+
+function doClear(){
+    clear();
+    console.log(chalk.red('> You have cleared the console!'));
+    send_message = false;
+    return;
+}
+
+/**
+ * Help method
+ */
+function sendHelp(){
+    console.log(" ");
+    console.log(">> Overall help:");
+    console.log("> user");
+    console.log("> clear");
+
+
+    console.log("> help ");
+    console.log(" ");
 }
