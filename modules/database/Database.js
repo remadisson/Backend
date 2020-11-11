@@ -20,8 +20,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Defines databases used for database
-const dbrepo = monk(process.env.link);
-const systemdb = dbrepo('system_databases');
+const dbrepo = monk(process.env.mongo_link);
+const systemdb = dbrepo.get('system_databases');
 
 dbrepo.catch(err =>{
     console.log(err);

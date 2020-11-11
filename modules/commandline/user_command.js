@@ -18,10 +18,13 @@
                 --email [new mail]
                 --group [value]
 
-
 */
 
 const chalk = require('chalk');
+const questions = require('./questions');
+
+const UserClass = require('./../user/User');
+const UserConstructor = require('./../user/UserConstructor');
 
 /**
  * This is the user command. To create, edit and remove new users.
@@ -30,17 +33,30 @@ const chalk = require('chalk');
 module.exports = async(args) => {
 
     /**
-     * -> No switch-case statement used because of the overview of the code.
+     * -> No switch-case statement used to provide overview of the code.
      */
 
     if(args.length == 0){
-        sendhelp();
+        sendhelp(); 
        /* Needs to be returned, else the script would continue running */ return;
     }
 
     if(args[0] === "add"){
-        console.log("> Fuck");
+        
+        let question = [{question: "Please enter the name", abortable: true, lowerCase: false, clearSpacings: false},{question: 'Please enter the email', abortable: true, lowerCase: true, clearSpacings: true}, {question: 'Enter the group of the user (0000/2000/3000)', abortable: true, lowerCase: true, clearSpacings: false}];
+        
+        const response = await questions.ask.multiplequestions(question);
+            
+            if(response == false){
+                return;
+            }
 
+        let date = UserConstructor.credentials.newDate();
+        
+        let user = UserClass.user.User(UserConstructor.credentials.userID, response[0], response[1], response[2], {}, UserConstructor.credentials.xToken(), UserConstructor.credentials.xToken(), date, date);
+
+        console.log(user);
+        
         /* Needs to be returned, else the script would continue running */ return;
     }
 
@@ -70,7 +86,7 @@ module.exports = async(args) => {
                     if(value !== null && value !== undefined && !value.includes("-") && value.length > 0){
                         item['value'] = value;
                     } else {
-                        console.log(false); // TODO
+                        console.log(chalk.red('> Syntax error: ') + chalk.yellow("Please check command at '" + item['id'] + "'")); // TODO
                     }
                 }
             }) 

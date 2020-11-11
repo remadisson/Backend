@@ -13,12 +13,12 @@
             changedDetails: Gives Information about the changed Date and new Details (like email(aodjsosjaod@spasti.com) changed at 1.1.0020)
 
             group: Defines the permission the user has in the dashboard and in the rest of the backend
-<
+
             databases: The Values identifies the databases created by the User
 
             authentication token: Refers to the API for own databases
 
-            ID-Token (id-token): Allowes others to add users to their databases
+            ID-Token (id-token): Allows others to add users to their databases
 
 */
 
@@ -29,17 +29,18 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Defines databases used for users
-const dbrepo = monk(process.env.link);
-const sysusers = dbrepo('system_users');
+const dbrepo = monk(process.env.mongo_link);
+const sysusers = dbrepo.get('system_users');
 
 dbrepo.catch(err => {
     console.log(err);
 })
 
 module.exports.user = {
-    User: (id, email, group, databases, authToken, idToken, joinedAt, changedDetails) => {
+    User: (id, name, email, group, databases, authToken, idToken, joinedAt, changedDetails) => {
             return {
                 id: id,
+                name: name,
                 email: email,
                 group: group, 
                 databases: databases,
@@ -59,7 +60,7 @@ module.exports.user = {
     },
 
     addUsers: async(User) => {
-        return await sysusers.insert({id: User.id, email: User.email, group: User.group, databases: User.databases, authToken: User.authToken, idToken: User.idToken, joinedAt: User.joinedAt, changedDetails: User.changedDetails}).then(callback => callback);
+        return await sysusers.insert({id: User.id, name: User.name, email: User.email, group: User.group, databases: User.databases, authToken: User.authToken, idToken: User.idToken, joinedAt: User.joinedAt, changedDetails: User.changedDetails}).then(callback => callback);
     },
 
     deleteUser: async(id) => {

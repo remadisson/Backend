@@ -38,7 +38,7 @@ module.exports.init = async() => {
                 console.log(chalk.red("> This is not a command!"));
                 resolve();
             }
-            
+            return;
         });
     }).then(() => this.init());
     
