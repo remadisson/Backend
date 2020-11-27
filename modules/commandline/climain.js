@@ -3,11 +3,13 @@ const readline = require('readline');
 const chalk = require('chalk');
 const clear = require('clear');
 
-const rl = readline.createInterface({
+module.exports.rl = readline.createInterface({
     terminal: false,
     input: process.stdin,
     output: process.stdout
 })
+
+const rl = this.rl;
 
 let send_message = false;
 
@@ -70,6 +72,8 @@ function getCommand(command){
 
     return false;
 }
+
+// Stylistic Terminal operations
 
 /**
  * Clear method

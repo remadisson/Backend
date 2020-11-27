@@ -7,11 +7,7 @@
 const readline = require('readline');
 const chalk = require('chalk');
 
-const rl = readline.createInterface({
-    terminal: false,
-    input: process.stdin,
-    output: process.stdout
-})
+const rl = require('./climain').rl;
 
  module.exports.ask = {
 
@@ -22,7 +18,7 @@ const rl = readline.createInterface({
     question: async(question, abortable, lowerCase, clearSpaceings) => {
         let callback = undefined;
         await new Promise((resolve, reject) => {
-             rl.question(chalk.blue("> " + question + ": "), (input) => {
+             rl.question(chalk.blue("> " + question + ": "), async(input) => {
                 let res = input.toString().trim().replace(/  /g, " ");
 
                 lowerCase ? res = res.toLowerCase() : undefined;
@@ -37,7 +33,7 @@ const rl = readline.createInterface({
                 }
 
                 if(res === '' || res == ' '){
-                    console.log(chalk.red('> Command error: ') + "Your input is empty");
+                    console.log(chalk.red('> Command error: ') + "Your input is empty, bitch");
                     resolve();
                     return;
                 }
@@ -53,25 +49,27 @@ const rl = readline.createInterface({
 
     multiplequestions: async(multipleparameters) => {
         let callbacks = [];
-        console.log(multipleparameters);
-        for(i = 0; i < multipleparameters.length; i++){
-            let item = multipleparameters[i];
+
+        let index = 0;
+        while(index < multipleparameters.length){
+            let item = multipleparameters[index];
             let callback = undefined;
+            
+            callback = await this.ask.question(item['question'], item['abortable'], item['lowerCase'], item['clearSpacings']);
 
-            while(callback == undefined){
-                callback = await this.ask.question(item['question'], item['abortable'], item['lowerCase'], item['clearSpacings']);
-                console.log("> " + callback);
+            if(callback != undefined){
+                if(callback == false){
+                    console.log(chalk.red('> You have aborted this runnable.'));
+                    return callback;
+                }
+            
+                callbacks[index] = callback;
+            } else {
+                index--;
             }
 
-            if(callback == false){
-                console.log(chalk.red('> You have aborted this runnable.'));
-                return callback;
-            }
-           
-            callbacks[i] = callback;
-            console.log('I bims done, du sohn einer Muddtha')
+            index++;
         }
-
         return callbacks;
     }
 

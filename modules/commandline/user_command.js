@@ -43,9 +43,7 @@ module.exports = async(args) => {
 
     if(args[0] === "add"){
         
-        let question = [{question: "Please enter the name", abortable: true, lowerCase: false, clearSpacings: false},{question: 'Please enter the email', abortable: true, lowerCase: true, clearSpacings: true}, {question: 'Enter the group of the user (0000/2000/3000)', abortable: true, lowerCase: true, clearSpacings: false}];
-        
-        const response = await questions.ask.multiplequestions(question);
+        const response = await questions.ask.multiplequestions([questions.ask.parameter("Please enter the name", true, false, false), questions.ask.parameter("Please enter the email", true, true, true), questions.ask.parameter('Enter the group of the user (0000/2000/3000)', true, true, false)]);
             
             if(response == false){
                 return;
@@ -53,7 +51,8 @@ module.exports = async(args) => {
 
         let date = UserConstructor.credentials.newDate();
         
-        let user = UserClass.user.User(UserConstructor.credentials.userID, response[0], response[1], response[2], {}, UserConstructor.credentials.xToken(), UserConstructor.credentials.xToken(), date, date);
+        let user = UserClass.user.User(UserConstructor.credentials.userID(), response[0], response[1], response[2], {}, UserConstructor.credentials.xToken(), UserConstructor.credentials.xToken(), date, date);
+        console.log(response);
 
         console.log(user);
         
@@ -61,7 +60,8 @@ module.exports = async(args) => {
     }
 
     if(args[0] === "remove"){
-        console.log("> You!");
+        let test = await questions.ask.question("Can you help me?", true, true, true);
+        console.log(test);
 
         /* Needs to be returned, else the script would continue running */ return;
     }
